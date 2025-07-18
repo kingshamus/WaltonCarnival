@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walton Carnival - Celebrate Good Times</title>
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-sizing;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333; /* Black for readability */
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover; /* Ensures the image covers the entire background */
+            -webkit-background-size: cover; /* For Safari compatibility */
+            -moz-background-size: cover; /* For Firefox compatibility */
+            -o-background-size: cover; /* For Opera compatibility */
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 2rem;
+            border-bottom: 5px solid #f4c430; /* Yellow accent */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        header img {
+            max-width: 100%; /* Ensure the logo scales with the container */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 150px; /* Adjust based on your logo size */
+        }
+
+        header p {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            color: #fff; /* White for contrast against background */
+        }
+
+        /* Navigation Styles */
+        nav {
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #fff; /* White for contrast */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #f4c430; /* Yellow-orange hover effect */
+        }
+
+        /* Main Content */
+        .hero {
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            background: rgba(244, 196, 48, 0.7); /* Semi-transparent yellow-orange */
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            text-shadow: 0 0 10px #f4c430;
+            color: #333; /* Black text for readability */
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white overlay for readability */
+        }
+
+        .content h2 {
+            color: #333; /* Black for readability */
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid #fff; /* White accent */
+            padding-left: 1rem;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #333; /* Black text for readability */
+        }
+
+        /* Call to Action Button */
+        .cta {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .cta a {
+            background-color: #1e3a8a; /* Dark blue button */
+            color: #fff;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: 2px solid #f4c430;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .cta a:hover {
+            background-color: #f4c430; /* Yellow-orange on hover */
+            color: #1e3a8a;
+        }
+
+        /* Footer Styles */
+        footer {
+            padding: 1rem;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            background: rgba(30, 58, 138, 0.7); /* Semi-transparent blue overlay for footer */
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Divider Styles */
+        .divider {
+            width: 100%;
+            height: 20px; /* Adjust based on your divider.png height */
+            background: url('divider.png') repeat-x center; /* Repeat horizontally if needed */
+            background-size: contain; /* Scales the image to fit while maintaining aspect ratio */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header img {
+                max-height: 100px; /* Smaller logo on mobile */
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                margin: 1rem auto;
+            }
+
+            .divider {
+                height: 15px; /* Adjust for smaller screens if needed */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png">
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#tickets">Tickets</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h2>Join the Walton Carnival Celebration!</h2>
+    </section>
+    <div class="divider"></div>
+
+    <section class="content">
+        <h2>Welcome to the Walton Carnival</h2>
+        <p>
+            The Walton Carnival is back with a vibrant celebration! 
+            Get ready for thrilling rides, lively entertainment, and good times for all ages. 
+            This year, we're bringing the festive spirit to Walton.
+        </p>
+        <p>
+            Stay tuned for updates on our exciting event schedule, ticket prices, and special attractions. 
+            Whether you're a local or visiting, the Walton Carnival promises an unforgettable experience!
+        </p>
+
+        <div class="cta">
+            <a href="#tickets">Get Your Tickets Now!</a>
+        </div>
+
+        <h2>Why You Can't Miss It</h2>
+        <p>
+            Expect dazzling performances, fun-filled rides, and a festive atmosphere that captures the joy of celebration. 
+            From food stalls to live music, there's something for everyone at the Walton Carnival.
+        </p>
+    </section>
+    <div class="divider"></div>
+
+    <footer>
+        <p>© 2025 Walton Carnival. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
