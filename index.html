@@ -249,6 +249,26 @@
             }
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fade-out effect on link click, excluding in-page anchors
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        // Allow default behavior for in-page anchors (e.g., #tickets, #contact)
+                        return;
+                    }
+                    e.preventDefault();
+                    document.body.style.transition = 'opacity 0.5s';
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        window.location.href = link.href;
+                    }, 500);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -257,9 +277,9 @@
 
     <nav>
         <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#events">Events</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="friends.html">Friends</a></li>
+            <li><a href="blog.html">Blog</a></li>
             <li><a href="#tickets">Tickets</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -304,9 +324,8 @@
         </form>
     </section>
 
-        <footer>
+    <footer>
         <p>© 2025 Walton Carnival. All Rights Reserved.</p>
     </footer>
-    
 </body>
 </html>
