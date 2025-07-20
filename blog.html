@@ -184,125 +184,71 @@
                 });
             });
 
-            // Fetch and display blog posts from local BLOG folder
-            function fetchLocalBlogPosts() {
-                const blogFolder = 'BLOG/';
-                const contentDiv = document.querySelector('.content');
-                const fileNames = ['100.txt', '99.txt', '98.txt', '97.txt', '96.txt', '95.txt', '94.txt', '93.txt', '92.txt', '91.txt',
-                                 '90.txt', '89.txt', '88.txt', '87.txt', '86.txt', '85.txt', '84.txt', '83.txt', '82.txt', '81.txt',
-                                 '80.txt', '79.txt', '78.txt', '77.txt', '76.txt', '75.txt', '74.txt', '73.txt', '72.txt', '71.txt',
-                                 '70.txt', '69.txt', '68.txt', '67.txt', '66.txt', '65.txt', '64.txt', '63.txt', '62.txt', '61.txt',
-                                 '60.txt', '59.txt', '58.txt', '57.txt', '56.txt', '55.txt', '54.txt', '53.txt', '52.txt', '51.txt',
-                                 '50.txt', '49.txt', '48.txt', '47.txt', '46.txt', '45.txt', '44.txt', '43.txt', '42.txt', '41.txt',
-                                 '40.txt', '39.txt', '38.txt', '37.txt', '36.txt', '35.txt', '34.txt', '33.txt', '32.txt', '31.txt',
-                                 '30.txt', '29.txt', '28.txt', '27.txt', '26.txt', '25.txt', '24.txt', '23.txt', '22.txt', '21.txt',
-                                 '20.txt', '19.txt', '18.txt', '17.txt', '16.txt', '15.txt', '14.txt', '13.txt', '12.txt', '11.txt',
-                                 '10.txt', '9.txt', '8.txt', '7.txt', '6.txt', '5.txt', '4.txt', '3.txt', '2.txt', '1.txt'];
+            // Fetch and display blog posts from GitHub repository
+            const repoOwner = 'kingshamus';
+            const repoName = 'WaltonCarnival';
+            const blogPath = 'BLOG';
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${blogPath}`;
+            const rawBaseUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${blogPath}/`;
 
-                fileNames.sort((a, b) => parseInt(b) - parseInt(a));
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch repository contents');
+                    return response.json();
+                })
+                .then(files => {
+                    const textFiles = files
+                        .filter(file => file.name.endsWith('.txt'))
+                        .sort((a, b) => parseInt(b.name) - parseInt(a.name));
+                    const contentDiv = document.querySelector('.content');
 
-                fileNames.forEach(fileName => {
-                    fetch(blogFolder + fileName)
-                        .then(response => {
-                            if (!response.ok) throw new Error('File not found');
-                            return response.text();
-                        })
-                        .then(text => {
-                            const postDiv = document.createElement('div');
-                            postDiv.className = 'blog-post';
+                    textFiles.forEach(file => {
+                        fetch(file.download_url)
+                            .then(response => {
+                                if (!response.ok) throw new Error('Failed to fetch file content');
+                                return response.text();
+                            })
+                            .then(text => {
+                                const postDiv = document.createElement('div');
+                                postDiv.className = 'blog-post';
 
-                            // Add image if corresponding JPG exists
-                            const imageDiv = document.createElement('div');
-                            imageDiv.className = 'image';
-                            const imgName = fileName.replace('.txt', '.jpg');
-                            const img = document.createElement('img');
-                            img.src = blogFolder + imgName;
-                            img.alt = `Image for post ${fileName.replace('.txt', '')}`;
-                            img.onerror = () => img.style.display = 'none'; // Hide if image fails to load
-                            imageDiv.appendChild(img);
+                                // Add image if corresponding JPG exists
+                                const imageDiv = document.createElement('div');
+                                imageDiv.className = 'image';
+                                const imgName = file.name.replace('.txt', '.jpg');
+                                const img = document.createElement('img');
+                                img.src = rawBaseUrl + imgName;
+                                img.alt = `Image for post ${file.name.replace('.txt', '')}`;
+                                img.onerror = () => img.style.display = 'none'; // Hide if image fails to load
+                                imageDiv.appendChild(img);
 
-                            // Add text content, removing YouTube link if present
-                            const textDiv = document.createElement('div');
-                            textDiv.className = 'text';
-                            const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[\w-]+|https?:\/\/(?:www\.)?youtu\.be\/[\w-]+)/;
-                            const cleanText = text.replace(youtubeRegex, '').trim(); // Remove YouTube link
-                            textDiv.innerHTML = `<h3>${fileName.replace('.txt', '')}</h3><p>${cleanText}</p>`;
+                                // Add text content, removing YouTube link if present
+                                const textDiv = document.createElement('div');
+                                textDiv.className = 'text';
+                                const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[\w-]+|https?:\/\/(?:www\.)?youtu\.be\/[\w-]+)/;
+                                const cleanText = text.replace(youtubeRegex, '').trim(); // Remove YouTube link
+                                textDiv.innerHTML = `<h3>${file.name.replace('.txt', '')}</h3><p>${cleanText}</p>`;
 
-                            // Check for YouTube link and embed video
-                            const youtubeMatch = text.match(youtubeRegex);
-                            if (youtubeMatch) {
-                                const videoId = youtubeMatch[0].includes('youtube.com') 
-                                    ? youtubeMatch[0].split('v=')[1].split('&')[0]
-                                    : youtubeMatch[0].split('/').pop();
-                                const videoDiv = document.createElement('div');
-                                videoDiv.className = 'youtube-video';
-                                videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                                textDiv.appendChild(videoDiv);
-                            }
+                                // Check for YouTube link and embed video
+                                const youtubeMatch = text.match(youtubeRegex);
+                                if (youtubeMatch) {
+                                    const videoId = youtubeMatch[0].includes('youtube.com') 
+                                        ? youtubeMatch[0].split('v=')[1].split('&')[0]
+                                        : youtubeMatch[0].split('/').pop();
+                                    const videoDiv = document.createElement('div');
+                                    videoDiv.className = 'youtube-video';
+                                    videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                                    textDiv.appendChild(videoDiv);
+                                }
 
-                            postDiv.appendChild(imageDiv);
-                            postDiv.appendChild(textDiv);
-                            contentDiv.appendChild(postDiv);
-                        })
-                        .catch(error => console.error(`Error fetching ${fileName}:`, error));
-                });
-            }
-
-            if (window.location.protocol === 'file:') {
-                fetchLocalBlogPosts();
-            } else {
-                const repoUrl = '/BLOG/';
-                fetch('/BLOG')
-                    .then(response => response.json())
-                    .then(files => {
-                        const textFiles = files.filter(file => file.name.endsWith('.txt'))
-                                              .sort((a, b) => parseInt(b.name) - parseInt(a.name));
-                        const contentDiv = document.querySelector('.content');
-                        textFiles.forEach(file => {
-                            fetch(file.download_url)
-                                .then(response => response.text())
-                                .then(text => {
-                                    const postDiv = document.createElement('div');
-                                    postDiv.className = 'blog-post';
-
-                                    // Add image if corresponding JPG exists
-                                    const imageDiv = document.createElement('div');
-                                    imageDiv.className = 'image';
-                                    const imgName = file.name.replace('.txt', '.jpg');
-                                    const img = document.createElement('img');
-                                    img.src = repoUrl + imgName;
-                                    img.alt = `Image for post ${file.name.replace('.txt', '')}`;
-                                    img.onerror = () => img.style.display = 'none'; // Hide if image fails to load
-                                    imageDiv.appendChild(img);
-
-                                    // Add text content, removing YouTube link if present
-                                    const textDiv = document.createElement('div');
-                                    textDiv.className = 'text';
-                                    const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[\w-]+|https?:\/\/(?:www\.)?youtu\.be\/[\w-]+)/;
-                                    const cleanText = text.replace(youtubeRegex, '').trim(); // Remove YouTube link
-                                    textDiv.innerHTML = `<h3>${file.name.replace('.txt', '')}</h3><p>${cleanText}</p>`;
-
-                                    // Check for YouTube link and embed video
-                                    const youtubeMatch = text.match(youtubeRegex);
-                                    if (youtubeMatch) {
-                                        const videoId = youtubeMatch[0].includes('youtube.com') 
-                                            ? youtubeMatch[0].split('v=')[1].split('&')[0]
-                                            : youtubeMatch[0].split('/').pop();
-                                        const videoDiv = document.createElement('div');
-                                        videoDiv.className = 'youtube-video';
-                                        videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                                        textDiv.appendChild(videoDiv);
-                                    }
-
-                                    postDiv.appendChild(imageDiv);
-                                    postDiv.appendChild(textDiv);
-                                    contentDiv.appendChild(postDiv);
-                                })
-                                .catch(error => console.error('Error fetching file:', error));
-                        });
-                    })
-                    .catch(error => console.error('Error fetching file list:', error));
-            }
+                                postDiv.appendChild(imageDiv);
+                                postDiv.appendChild(textDiv);
+                                contentDiv.appendChild(postDiv);
+                            })
+                            .catch(error => console.error(`Error fetching ${file.name}:`, error));
+                    });
+                })
+                .catch(error => console.error('Error fetching repository:', error));
         });
     </script>
 </head>
