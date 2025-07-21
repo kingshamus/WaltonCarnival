@@ -9,7 +9,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-sizing;
         }
 
         body {
@@ -24,19 +24,11 @@
             animation: fadeIn 1s ease-in;
         }
 
-        /* Fade-in Animation */
         @keyframes fadeIn {
-            0% {
-                background-color: #FFFFFF;
-                opacity: 0;
-            }
-            100% {
-                background-color: transparent;
-                opacity: 1;
-            }
+            0% { background-color: #FFFFFF; opacity: 0; }
+            100% { background-color: transparent; opacity: 1; }
         }
 
-        /* Header Styles */
         header {
             text-align: center;
             padding: 2rem;
@@ -56,7 +48,6 @@
             color: #fff;
         }
 
-        /* Navigation Styles */
         nav {
             padding: 1rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -81,7 +72,6 @@
             color: #f4c430;
         }
 
-        /* Content Styles */
         .content {
             max-width: 1200px;
             margin: 2rem auto;
@@ -141,11 +131,10 @@
 
         .blog-post .youtube-video iframe {
             width: 100%;
-            height: 315px;
+            height: 315px; /* Standard YouTube embed height */
             border: none;
         }
 
-        /* Footer Styles */
         footer {
             padding: 1rem;
             text-align: center;
@@ -160,7 +149,6 @@
             margin: 0;
         }
 
-        /* Divider Styles */
         .divider {
             width: 100%;
             height: 20px;
@@ -168,143 +156,168 @@
             background-size: contain;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
-            header img {
-                max-height: 100px;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .content h2 {
-                font-size: 1.5rem;
-            }
-
-            .divider {
-                height: 15px;
-            }
-
-            .blog-post .image {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-
-            .blog-post .text {
-                flex: 0 0 100%;
-            }
-
-            .blog-post .youtube-video iframe {
-                height: 200px;
-            }
+            header img { max-height: 100px; }
+            nav ul { flex-direction: column; gap: 1rem; }
+            .content h2 { font-size: 1.5rem; }
+            .divider { height: 15px; }
+            .blog-post .image { flex: 0 0 100%; max-width: 100%; }
+            .blog-post .text { flex: 0 0 100%; }
+            .blog-post .youtube-video iframe { height: 200px; }
         }
     </style>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Fade-out effect on link click, excluding in-page anchors
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    return; // Skip fade-out for in-page anchors
-                }
-                e.preventDefault();
-                document.body.style.transition = 'opacity 0.5s';
-                document.body.style.opacity = '0';
-                setTimeout(() => {
-                    window.location.href = link.href;
-                }, 500);
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fade-out effect on link click, excluding in-page anchors
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        return; // Skip fade-out for in-page anchors
+                    }
+                    e.preventDefault();
+                    document.body.style.transition = 'opacity 0.5s';
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        window.location.href = link.href;
+                    }, 500);
+                });
             });
+
+            // Fetch and display blog posts from local BLOG folder
+            function fetchLocalBlogPosts() {
+                const blogFolder = 'BLOG/';
+                const contentDiv = document.querySelector('.content');
+                const fileNames = ['100.txt', '99.txt', '98.txt', '97.txt', '96.txt', '95.txt', '94.txt', '93.txt', '92.txt', '91.txt',
+                                 '90.txt', '89.txt', '88.txt', '87.txt', '86.txt', '85.txt', '84.txt', '83.txt', '82.txt', '81.txt',
+                                 '80.txt', '79.txt', '78.txt', '77.txt', '76.txt', '75.txt', '74.txt', '73.txt', '72.txt', '71.txt',
+                                 '70.txt', '69.txt', '68.txt', '67.txt', '66.txt', '65.txt', '64.txt', '63.txt', '62.txt', '61.txt',
+                                 '60.txt', '59.txt', '58.txt', '57.txt', '56.txt', '55.txt', '54.txt', '53.txt', '52.txt', '51.txt',
+                                 '50.txt', '49.txt', '48.txt', '47.txt', '46.txt', '45.txt', '44.txt', '43.txt', '42.txt', '41.txt',
+                                 '40.txt', '39.txt', '38.txt', '37.txt', '36.txt', '35.txt', '34.txt', '33.txt', '32.txt', '31.txt',
+                                 '30.txt', '29.txt', '28.txt', '27.txt', '26.txt', '25.txt', '24.txt', '23.txt', '22.txt', '21.txt',
+                                 '20.txt', '19.txt', '18.txt', '17.txt', '16.txt', '15.txt', '14.txt', '13.txt', '12.txt', '11.txt',
+                                 '10.txt', '9.txt', '8.txt', '7.txt', '6.txt', '5.txt', '4.txt', '3.txt', '2.txt', '1.txt'];
+
+                fileNames.sort((a, b) => parseInt(b) - parseInt(a));
+
+                fileNames.forEach(fileName => {
+                    fetch(blogFolder + fileName)
+                        .then(response => {
+                            if (!response.ok) throw new Error('File not found');
+                            return response.text();
+                        })
+                        .then(text => {
+                            const postDiv = document.createElement('div');
+                            postDiv.className = 'blog-post';
+
+                            // Add image if corresponding JPG exists
+                            const imageDiv = document.createElement('div');
+                            imageDiv.className = 'image';
+                            const imgName = fileName.replace('.txt', '.jpg');
+                            const img = document.createElement('img');
+                            img.src = blogFolder + imgName;
+                            img.alt = `Image for post ${fileName.replace('.txt', '')}`;
+                            img.onerror = () => img.style.display = 'none'; // Hide if image fails to load
+                            imageDiv.appendChild(img);
+
+                            // Add text content, removing YouTube link if present
+                            const textDiv = document.createElement('div');
+                            textDiv.className = 'text';
+                            const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[\w-]+|https?:\/\/(?:www\.)?youtu\.be\/[\w-]+)/;
+                            const cleanText = text.replace(youtubeRegex, '').trim(); // Remove YouTube link
+                            textDiv.innerHTML = `<h3>${fileName.replace('.txt', '')}</h3><p>${cleanText}</p>`;
+
+                            // Check for YouTube link and embed video
+                            const youtubeMatch = text.match(youtubeRegex);
+                            if (youtubeMatch) {
+                                const videoId = youtubeMatch[0].includes('youtube.com') 
+                                    ? youtubeMatch[0].split('v=')[1].split('&')[0]
+                                    : youtubeMatch[0].split('/').pop();
+                                const videoDiv = document.createElement('div');
+                                videoDiv.className = 'youtube-video';
+                                videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                                textDiv.appendChild(videoDiv);
+                            }
+
+                            postDiv.appendChild(imageDiv);
+                            postDiv.appendChild(textDiv);
+                            contentDiv.appendChild(postDiv);
+                        })
+                        .catch(error => console.error(`Error fetching ${fileName}:`, error));
+                });
+            }
+
+            if (window.location.protocol === 'file:') {
+                fetchLocalBlogPosts();
+            } else {
+                const repoUrl = 'https://raw.githubusercontent.com/yourusername/yourrepo/main/BLOG/';
+                fetch('https://api.github.com/repos/yourusername/yourrepo/contents/BLOG')
+                    .then(response => response.json())
+                    .then(files => {
+                        const textFiles = files.filter(file => file.name.endsWith('.txt'))
+                                              .sort((a, b) => parseInt(b.name) - parseInt(a.name));
+                        const contentDiv = document.querySelector('.content');
+                        textFiles.forEach(file => {
+                            fetch(file.download_url)
+                                .then(response => response.text())
+                                .then(text => {
+                                    const postDiv = document.createElement('div');
+                                    postDiv.className = 'blog-post';
+
+                                    // Add image if corresponding JPG exists
+                                    const imageDiv = document.createElement('div');
+                                    imageDiv.className = 'image';
+                                    const imgName = file.name.replace('.txt', '.jpg');
+                                    const img = document.createElement('img');
+                                    img.src = repoUrl + imgName;
+                                    img.alt = `Image for post ${file.name.replace('.txt', '')}`;
+                                    img.onerror = () => img.style.display = 'none'; // Hide if image fails to load
+                                    imageDiv.appendChild(img);
+
+                                    // Add text content, removing YouTube link if present
+                                    const textDiv = document.createElement('div');
+                                    textDiv.className = 'text';
+                                    const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[\w-]+|https?:\/\/(?:www\.)?youtu\.be\/[\w-]+)/;
+                                    const cleanText = text.replace(youtubeRegex, '').trim(); // Remove YouTube link
+                                    textDiv.innerHTML = `<h3>${file.name.replace('.txt', '')}</h3><p>${cleanText}</p>`;
+
+                                    // Check for YouTube link and embed video
+                                    const youtubeMatch = text.match(youtubeRegex);
+                                    if (youtubeMatch) {
+                                        const videoId = youtubeMatch[0].includes('youtube.com') 
+                                            ? youtubeMatch[0].split('v=')[1].split('&')[0]
+                                            : youtubeMatch[0].split('/').pop();
+                                        const videoDiv = document.createElement('div');
+                                        videoDiv.className = 'youtube-video';
+                                        videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                                        textDiv.appendChild(videoDiv);
+                                    }
+
+                                    postDiv.appendChild(imageDiv);
+                                    postDiv.appendChild(textDiv);
+                                    contentDiv.appendChild(postDiv);
+                                })
+                                .catch(error => console.error('Error fetching file:', error));
+                        });
+                    })
+                    .catch(error => console.error('Error fetching file list:', error));
+            }
         });
-
-        // Fetch and display blog posts from local BLOG folder
-        function fetchLocalBlogPosts() {
-            const blogFolder = '/BLOG/'; // Relative path on GitHub Pages
-            const contentDiv = document.querySelector('.content');
-            const fileNames = [
-                '100.txt', '99.txt', '98.txt', '97.txt', '96.txt', '95.txt', '94.txt', '93.txt', '92.txt', '91.txt',
-                '90.txt', '89.txt', '88.txt', '87.txt', '86.txt', '85.txt', '84.txt', '83.txt', '82.txt', '81.txt',
-                '80.txt', '79.txt', '78.txt', '77.txt', '76.txt', '75.txt', '74.txt', '73.txt', '72.txt', '71.txt',
-                '70.txt', '69.txt', '68.txt', '67.txt', '66.txt', '65.txt', '64.txt', '63.txt', '62.txt', '61.txt',
-                '60.txt', '59.txt', '58.txt', '57.txt', '56.txt', '55.txt', '54.txt', '53.txt', '52.txt', '51.txt',
-                '50.txt', '49.txt', '48.txt', '47.txt', '46.txt', '45.txt', '44.txt', '43.txt', '42.txt', '41.txt',
-                '40.txt', '39.txt', '38.txt', '37.txt', '36.txt', '35.txt', '34.txt', '33.txt', '32.txt', '31.txt',
-                '30.txt', '29.txt', '28.txt', '27.txt', '26.txt', '25.txt', '24.txt', '23.txt', '22.txt', '21.txt',
-                '20.txt', '19.txt', '18.txt', '17.txt', '16.txt', '15.txt', '14.txt', '13.txt', '12.txt', '11.txt',
-                '10.txt', '9.txt', '8.txt', '7.txt', '6.txt', '5.txt', '4.txt', '3.txt', '2.txt', '1.txt'
-            ].sort((a, b) => parseInt(b) - parseInt(a));
-
-            fileNames.forEach(fileName => {
-                fetch(blogFolder + fileName)
-                    .then(response => {
-                        if (!response.ok) throw new Error('File not found');
-                        return response.text();
-                    })
-                    .then(text => {
-                        const postDiv = document.createElement('div');
-                        postDiv.className = 'blog-post';
-
-                        // Add image if corresponding JPG exists
-                        const imageDiv = document.createElement('div');
-                        imageDiv.className = 'image';
-                        const imgName = fileName.replace('.txt', '.jpg');
-                        const img = document.createElement('img');
-                        img.src = blogFolder + imgName;
-                        img.alt = `Image for post ${fileName.replace('.txt', '')}`;
-                        img.onerror = () => img.style.display = 'none';
-                        imageDiv.appendChild(img);
-
-                        // Add text content, removing YouTube link if present
-                        const textDiv = document.createElement('div');
-                        textDiv.className = 'text';
-                        const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[\w-]+|https?:\/\/(?:www\.)?youtu\.be\/[\w-]+)/;
-                        const cleanText = text.replace(youtubeRegex, '').trim();
-                        textDiv.innerHTML = `<h3>${fileName.replace('.txt', '')}</h3><p>${cleanText}</p>`;
-
-                        // Check for YouTube link and embed video
-                        const youtubeMatch = text.match(youtubeRegex);
-                        if (youtubeMatch) {
-                            const videoId = youtubeMatch[0].includes('youtube.com')
-                                ? youtubeMatch[0].split('v=')[1].split('&')[0]
-                                : youtubeMatch[0].split('/').pop();
-                            const videoDiv = document.createElement('div');
-                            videoDiv.className = 'youtube-video';
-                            videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                            textDiv.appendChild(videoDiv);
-                        }
-
-                        postDiv.appendChild(imageDiv);
-                        postDiv.appendChild(textDiv);
-                        contentDiv.appendChild(postDiv);
-                    })
-                    .catch(error => console.error(`Error fetching ${fileName}:`, error));
-            });
-        }
-
-        // Run only for local file access or GitHub Pages
-        if (window.location.protocol === 'file:' || window.location.hostname === 'kingshamus.github.io') {
-            fetchLocalBlogPosts();
-        } else {
-            console.log('CORS issue detected. Please host BLOG folder locally or use a proxy.');
-        }
-    });
-</script>
+    </script>
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Walton Carnival Logo">
+        <img src="logo.png">
     </header>
 
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="friends.html">Friends</a></li>
-            <li><a href="blog.html" class="active">Blog</a></li>
+            <li><a href="blog.html">Blog</a></li>
             <li><a href="index.html#tickets">Tickets</a></li>
             <li><a href="index.html#contact">Contact</a></li>
-            <li><a href="donations.html">Donate</a></li>
         </ul>
     </nav>
 
