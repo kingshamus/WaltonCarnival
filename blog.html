@@ -288,8 +288,8 @@
             if (window.location.protocol === 'file:') {
                 fetchLocalBlogPosts();
             } else {
-                const repoUrl = 'https://raw.githubusercontent.com/yourusername/yourrepo/main/BLOG/';
-                fetch('https://api.github.com/repos/yourusername/yourrepo/contents/BLOG')
+                const repoUrl = 'https://github.com/kingshamus/WaltonCarnival/tree/main/BLOG';
+                fetch('https://github.com/kingshamus/WaltonCarnival/tree/main/BLOG')
                     .then(response => response.json())
                     .then(files => {
                         const textFiles = files.filter(file => file.name.endsWith('.txt'))
