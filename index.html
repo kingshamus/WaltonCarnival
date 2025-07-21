@@ -240,6 +240,14 @@
                 margin: 1rem auto;
             }
 
+            .content h2 {
+                font-size: 1.5rem;
+            }
+
+            .content p {
+                font-size: 1rem;
+            }
+
             .divider {
                 height: 15px;
             }
@@ -251,12 +259,30 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Fade-out effect on link click, excluding in-page anchors
-            document.querySelectorAll('nav a').forEach(link => {
+            console.log('DOM fully loaded, setting up event listeners');
+
+            // Fade-out effect on link click, with autoscrolling for in-page anchors
+            document.querySelectorAll('nav a, .cta a').forEach(link => {
                 link.addEventListener('click', (e) => {
                     const href = link.getAttribute('href');
-                    if (href && href.startsWith('#')) {
-                        return; // Allow default behavior for in-page anchors (e.g., #tickets, #contact)
+                    console.log('Link clicked:', href);
+                    if (href && (href.startsWith('#') || href.includes('#'))) {
+                        e.preventDefault();
+                        let targetId = href;
+                        if (href.includes('#')) {
+                            targetId = '#' + href.split('#')[1]; // Ensure targetId starts with #
+                        }
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            console.log('Scrolling to:', targetId);
+                            target.scrollIntoView({ behavior: 'smooth' });
+                            if (href.includes('index.html')) {
+                                history.pushState(null, null, href);
+                            }
+                        } else {
+                            console.log('Target not found:', targetId);
+                        }
+                        return;
                     }
                     e.preventDefault();
                     document.body.style.transition = 'opacity 0.5s';
@@ -266,6 +292,18 @@
                     }, 500);
                 });
             });
+
+            // Auto-scroll on page load if hash is present
+            if (window.location.hash) {
+                console.log('Hash detected:', window.location.hash);
+                const target = document.querySelector(window.location.hash);
+                if (target) {
+                    console.log('Scrolling to hash target:', window.location.hash);
+                    setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
+                } else {
+                    console.log('Hash target not found:', window.location.hash);
+                }
+            }
         });
     </script>
 </head>
@@ -276,10 +314,10 @@
 
     <nav>
         <ul>
-            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="friends.html">Friends</a></li>
             <li><a href="blog.html">Blog</a></li>
-            <li><a href="index.html#tickets">Tickets</a></li>
+            <li><a href="tickets.html">Tickets</a></li>
             <li><a href="index.html#contact">Contact</a></li>
             <li><a href="donations.html">Donate</a></li>
         </ul>
@@ -303,7 +341,7 @@
         </p>
 
         <div class="cta">
-            <a href="#tickets">Get Your Tickets Now!</a>
+            <a href="tickets.html">Get Your Tickets Now!</a>
         </div>
 
         <h2>Why You Can't Miss It</h2>
@@ -314,7 +352,16 @@
     </section>
     <div class="divider"></div>
 
-    <section class="contact">
+    <!-- Tickets section (placeholder) -->
+    <section id="tickets" class="content">
+        <h2>Tickets Information</h2>
+        <p>This section will be updated with ticket details soon.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Contact section with ID -->
+    <section id="contact" class="contact">
         <h2>Contact Us</h2>
         <form action="#" method="POST">
             <input type="text" name="name" placeholder="Your Name" required>
