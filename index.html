@@ -221,6 +221,15 @@
             color: #1e3a8a;
         }
 
+        /* Form Message Styles */
+        #form-message {
+            display: none;
+            color: #fff;
+            text-shadow: 0 0 10px #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             header img {
@@ -304,6 +313,18 @@
                     console.log('Hash target not found:', window.location.hash);
                 }
             }
+
+            // Check for form submission status
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const formMessage = document.getElementById('form-message');
+            if (status === 'success') {
+                formMessage.style.display = 'block';
+                formMessage.textContent = 'Thank you! Your message has been sent successfully.';
+            } else if (status === 'error') {
+                formMessage.style.display = 'block';
+                formMessage.textContent = 'Sorry, there was an error sending your message. Please try again.';
+            }
         });
     </script>
 </head>
@@ -315,8 +336,8 @@
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="friends.html">Friends</a></li>
-            <li><a href="blog.html">Blog</a></li>
+            <li><a href="friends.html">Friends of Walton Carnival</a></li>
+            <li><a href="blog.html">Latest News</a></li>
             <li><a href="tickets.html">Tickets</a></li>
             <li><a href="index.html#contact">Contact</a></li>
             <li><a href="donations.html">Donate</a></li>
@@ -363,7 +384,10 @@
     <!-- Contact section with ID -->
     <section id="contact" class="contact">
         <h2>Contact Us</h2>
-        <form action="#" method="POST">
+        <div id="form-message"></div>
+        <form action="https://formspree.io/f/xanbepnl" method="POST">
+            <input type="hidden" name="_to" value="info@waltoncarnival.org">
+            <input type="hidden" name="_next" value="/index.html#contact?status=success">
             <input type="text" name="name" placeholder="Your Name" required>
             <input type="email" name="email" placeholder="Your Email" required>
             <textarea name="message" placeholder="Your Message" required></textarea>
